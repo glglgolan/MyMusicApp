@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אפליקציית למידת מוזיקה - לוח בקרה משחקוני</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #007AFF;
+            --secondary: #5AC8FA;
+            --text-primary: #000;
+            --text-secondary: #666;
+            --bg-primary: #FFF;
+            --bg-secondary: #F5F5F7;
+            --border: #E5E5EA;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            direction: rtl;
+            text-align: right;
+        }
+
+        /* ==================== Navbar ==================== */
+        .navbar {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .navbar-right {
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 16px;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        /* ==================== Main Content ==================== */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            direction: rtl;
+            text-align: right;
+        }
+
+        h2 {
+            margin-bottom: 24px;
+            font-size: 28px;
+        }
+
+        h3 {
+            margin-bottom: 16px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        h4 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* ==================== Stats Grid ==================== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            flex-direction: row-reverse;
+        }
+
+        .stat-points {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .stat-streak {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E72);
+            border-color: #FF6B6B;
+        }
+
+        .stat-level {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .stat-completed {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+
+        .stat-icon {
+            font-size: 16px;
+        }
+
+        /* ==================== Progress Bar ==================== */
+        .progress-container {
+            margin-bottom: 32px;
+            padding: 16px;
+            background: linear-gradient(135deg, #f5f9ff, #f0f8ff);
+            border-radius: 12px;
+            border: 2px solid #E3F2FD;
+            text-align: right;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: var(--bg-secondary);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ECDC4, #45B7D1);
+            border-radius: 5px;
+            width: 45%;
+            transition: width 0.6s ease;
+        }
+
+        /* ==================== Quote ==================== */
+        .motivational-quote {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        /* ==================== Assignment Progress ==================== */
+        .assignment-progress {
+            padding: 16px;
+            background: linear-gradient(135deg, #f5f9ff, #f0f8ff);
+            border-radius: 12px;
+            border: 2px solid #E3F2FD;
+            margin-bottom: 32px;
+            text-align: right;
+        }
+
+        .progress-header {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .progress-count {
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .progress-bar-wrapper {
+            margin-bottom: 12px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 122, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #0051d5);
+            border-radius: 3px;
+            width: 60%;
+        }
+
+        /* ==================== Grid Layout ==================== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        /* ==================== Cards ==================== */
+        .card {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: box-shadow 0.2s;
+            text-align: right;
+        }
+
+        .card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        /* ==================== Interactive Lesson Card ==================== */
+        .interactive-lesson-card {
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 12px;
+            text-align: right;
+        }
+
+        .interactive-lesson-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.15);
+        }
+
+        .lesson-emoji {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .lesson-content {
+            flex: 1;
+            text-align: right;
+        }
+
+        .lesson-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+
+        .lesson-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .lesson-button {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .lesson-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* ==================== Buttons ==================== */
+        .btn {
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #0051d5;
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border);
+        }
+
+        /* ==================== Achievements ==================== */
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .achievement-card {
+            padding: 12px;
+            background: linear-gradient(135deg, #FFE5B4, #FFDAB9);
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2);
+        }
+
+        .achievement-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .achievement-title {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .achievement-points {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* ==================== Tips Section ==================== */
+        .tips-section {
+            padding: 16px;
+            background: linear-gradient(135deg, #E3F2FD, #F3E5F5);
+            border-radius: 8px;
+            border-right: 4px solid var(--primary);
+            text-align: right;
+        }
+
+        .tips-section ul {
+            margin-right: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .tips-section li {
+            margin-bottom: 6px;
+        }
+
+        /* ==================== Recent Activity ==================== */
+        .activity-item {
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            text-align: right;
+        }
+
+        /* ==================== Badge Style ==================== */
+        .badge-completed {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ==================== Responsive ==================== */
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .achievement-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-right">
+            <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">התנתקות</button>
+            <span>student@example.com (תלמיד)</span>
+        </div>
+        <div class="navbar-brand">🎵 למידת מוזיקה</div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>🎵 לוח בקרה למידה</h2>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-badge stat-points">
+                <span>250 נק'</span>
+                <span class="stat-icon">⭐</span>
+            </div>
+            <div class="stat-badge stat-streak">
+                <span>7 ימים</span>
+                <span class="stat-icon">🔥</span>
+            </div>
+            <div class="stat-badge stat-level">
+                <span>רמה 3</span>
+                <span class="stat-icon">📊</span>
+            </div>
+            <div class="stat-badge stat-completed">
+                <span>5 הושלם</span>
+                <span class="stat-icon">🏆</span>
+            </div>
+        </div>
+
+        <!-- Level Progress -->
+        <div class="progress-container">
+            <div class="progress-label">התקדמות רמה 3</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 45%;"></div>
+            </div>
+        </div>
+
+        <!-- Motivational Quote -->
+        <div class="motivational-quote">🌟 תמשיך! אתה עושה עבודה מדהימה!</div>
+
+        <!-- Assignment Progress -->
+        <div class="assignment-progress">
+            <div class="progress-header">
+                <span class="progress-count">3/5</span>
+                <span>המטלות</span>
+            </div>
+            <div class="progress-bar-wrapper">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 60%;"></div>
+                </div>
+            </div>
+            <div style="text-align: center; font-size: 14px; font-weight: 600; color: #4CAF50;">
+                🎉 עוד 2 למטרה!
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="grid-2">
+            <!-- Lessons Section -->
+            <div>
+                <h3>📚 שיעורים זמינים</h3>
+
+                <div class="interactive-lesson-card">
+                    <div class="lesson-emoji">🎵</div>
+                    <div class="lesson-content">
+                        <div class="lesson-title">יסודות תיאוריית מוזיקה</div>
+                        <div class="lesson-desc">למד את היסודות של תיאוריית מוזיקה...</div>
+                    </div>
+                    <button class="lesson-button">התחל ←</button>
+                </div>
+
+                <div class="interactive-lesson-card">
+                    <div class="lesson-emoji">🎸</div>
+                    <div class="lesson-content">
+                        <div class="lesson-title">יסודות הגיטרה</div>
+                        <div class="lesson-desc">שלוט בכל הדברים הבסיסיים של הגיטרה...</div>
+                    </div>
+                    <button class="lesson-button">התחל ←</button>
+                </div>
+
+                <div class="interactive-lesson-card">
+                    <div class="lesson-emoji">🎹</div>
+                    <div class="lesson-content">
+                        <div class="lesson-title">שיעורי פסנתר</div>
+                        <div class="lesson-desc">למד לנגן בפסנתר מאפס...</div>
+                    </div>
+                    <button class="lesson-button">התחל ←</button>
+                </div>
+            </div>
+
+            <!-- Assignments Section -->
+            <div>
+                <h3>✏️ המטלות</h3>
+
+                <div class="card">
+                    <div class="card-title">המטלה 1: תרגול סקאלות</div>
+                    <div class="card-subtitle">תרגל סקאלות מז'וריות ומינוריות במשך 15 דקות</div>
+                    <small style="color: var(--text-secondary);">שיעור: יסודות תיאוריית מוזיקה</small>
+                    <div style="margin-top: 12px; text-align: right;">
+                        <span class="badge-completed">✓ הוגש</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">המטלה 2: התקדמות אקורדים</div>
+                    <div class="card-subtitle">צור התקדמות אקורדים פשוטה והקלט אותה</div>
+                    <small style="color: var(--text-secondary);">שיעור: יסודות הגיטרה</small>
+                    <div style="margin-top: 12px; text-align: right;">
+                        <span class="badge-completed">✓ הוגש</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">המטלה 3: כתיבת מנגינה</div>
+                    <div class="card-subtitle">כתוב מנגינה פשוטה באמצעות התווים שלמדת</div>
+                    <small style="color: var(--text-secondary);">שיעור: יסודות תיאוריית מוזיקה</small>
+                    <div style="margin-top: 12px; text-align: right;">
+                        <button class="btn" style="width: auto; padding: 8px 12px; font-size: 12px;">הגש</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div style="margin-bottom: 32px; text-align: right;">
+            <h3>📊 פעילות אחרונה</h3>
+            <div class="activity-item">⭐ +15 נק' על הגשת המטלה</div>
+            <div class="activity-item">⭐ +10 נק' על השלמת השיעור</div>
+            <div class="activity-item">⭐ +15 נק' על הגשת המטלה</div>
+            <div class="activity-item">⭐ +10 נק' על השלמת השיעור</div>
+        </div>
+
+        <!-- Achievements -->
+        <div style="margin-bottom: 32px; text-align: right;">
+            <h3>🏆 תגים שהשגת</h3>
+            <div class="achievement-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">🎵</div>
+                    <div class="achievement-title">הצעד הראשון</div>
+                    <div class="achievement-points">+25 נק'</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🔥</div>
+                    <div class="achievement-title">חייל הרצף</div>
+                    <div class="achievement-points">+75 נק'</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">📝</div>
+                    <div class="achievement-title">מומחה למטלות</div>
+                    <div class="achievement-points">+100 נק'</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">⭐</div>
+                    <div class="achievement-title">הגעת לרמה 3</div>
+                    <div class="achievement-points">+150 נק'</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="tips-section">
+            <h4>💡 טיפים להרוויח עוד נקודות</h4>
+            <ul>
+                <li>השלם שיעורים כל יום כדי לשמור על הרצף שלך 🔥</li>
+                <li>הגש מטלות כדי להרוויח נקודות נוספות 📝</li>
+                <li>הגע לרמה 5 כדי לפתוח תגים בלעדיים ⭐</li>
+                <li>אתגר את עצמך עם שיעורים קשים יותר 🚀</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

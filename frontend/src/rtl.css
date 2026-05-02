@@ -1,0 +1,190 @@
+/* RTL/LTR Support Stylesheet */
+
+/* Default - LTR */
+body[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* RTL Mode */
+body[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+html[dir="ltr"] {
+  direction: ltr;
+}
+
+/* Navbar RTL */
+[dir="rtl"] .navbar {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .navbar-brand {
+  margin-left: auto;
+}
+
+[dir="rtl"] .navbar-nav {
+  flex-direction: row-reverse;
+}
+
+/* Cards RTL */
+[dir="rtl"] .card {
+  text-align: right;
+}
+
+[dir="rtl"] .post-header {
+  flex-direction: row-reverse;
+}
+
+/* Forms RTL */
+[dir="rtl"] .form-group {
+  text-align: right;
+}
+
+[dir="rtl"] .form-group label {
+  text-align: right;
+}
+
+[dir="rtl"] .form-group input,
+[dir="rtl"] .form-group textarea,
+[dir="rtl"] .form-group select {
+  text-align: right;
+}
+
+/* Messages RTL */
+[dir="rtl"] .message-sent {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .message-received {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+/* Grid RTL */
+[dir="rtl"] .grid-2,
+[dir="rtl"] .grid-3 {
+  direction: rtl;
+}
+
+/* Buttons RTL */
+[dir="rtl"] button {
+  text-align: center;
+}
+
+/* Text utilities */
+.rtl-text {
+  direction: rtl;
+  text-align: right;
+}
+
+.ltr-text {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Margin/Padding RTL adjustments */
+[dir="rtl"] .form-group {
+  margin-bottom: 20px;
+}
+
+[dir="rtl"] .navbar-nav {
+  margin-left: 0;
+  margin-right: 24px;
+}
+
+[dir="rtl"] .btn {
+  text-align: center;
+}
+
+/* Layout RTL */
+[dir="rtl"] .main-content {
+  text-align: right;
+}
+
+/* Language selector (if implemented) */
+.language-selector {
+  display: flex;
+  gap: 8px;
+}
+
+[dir="rtl"] .language-selector {
+  flex-direction: row-reverse;
+}
+
+.language-option {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.language-option:hover {
+  background: var(--border);
+}
+
+.language-option.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Input placeholders RTL */
+[dir="rtl"] ::placeholder {
+  text-align: right;
+}
+
+/* Responsive RTL */
+@media (max-width: 768px) {
+  [dir="rtl"] .grid-2,
+  [dir="rtl"] .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  [dir="rtl"] .navbar {
+    flex-direction: column;
+  }
+
+  [dir="rtl"] .navbar-nav {
+    flex-direction: column-reverse;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Animations RTL-safe */
+[dir="rtl"] .slide-in {
+  animation: slideInRTL 0.3s ease;
+}
+
+@keyframes slideInRTL {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+[dir="ltr"] .slide-in {
+  animation: slideInLTR 0.3s ease;
+}
+
+@keyframes slideInLTR {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
