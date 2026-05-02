@@ -1,10 +1,11 @@
 {
   "buildCommand": "cd frontend && npm run build",
   "outputDirectory": "frontend/dist",
+  "apiDir": "api",
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api"
+      "destination": "/?$1"
     },
     {
       "source": "/(.*)",
