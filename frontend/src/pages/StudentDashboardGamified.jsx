@@ -283,7 +283,6 @@ export default function StudentDashboardGamified({ supabase, user }) {
                   background: 'linear-gradient(135deg, #FFE5B4, #FFDAB9)',
                   borderRadius: '8px',
                   textAlign: 'center',
-                  borderRadius: '8px',
                   boxShadow: '0 2px 8px rgba(255, 215, 0, 0.2)',
                 }}
               >
