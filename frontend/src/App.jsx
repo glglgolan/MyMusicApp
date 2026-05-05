@@ -1,20 +1,14 @@
 import { useState, useEffect } from 'react'
-import { createClient } from '@supabase/supabase-js'
-import Login from './pages/Login'
+import { supabase } from './utils/supabaseClient'
+import { LoginScreenMelodia } from './pages/LoginScreenMelodia'
+import { StudentDashboardMelodia } from './pages/StudentDashboardMelodia'
+import { TeacherDashboardMelodia } from './pages/TeacherDashboardMelodia'
+import { LessonPlayerMelodia } from './pages/LessonPlayerMelodia'
 import Home from './pages/Home'
-import TeacherDashboard from './pages/TeacherDashboardEnhanced'
-import StudentDashboard from './pages/StudentDashboardGamified'
 import Navbar from './components/Navbar'
-import { initializeRTLSupport, getLanguagePreference } from './utils/rtl'
+import { initializeRTLSupport } from './utils/rtl'
 import './rtl.css'
 import './styles/gamification.css'
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
-
-const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: { persistSession: false }
-})
 
 function App() {
   const [user, setUser] = useState(null)
@@ -116,7 +110,7 @@ function App() {
   }
 
   if (!user) {
-    return <Login supabase={supabase} />
+    return <LoginScreenMelodia onLogin={(r) => setRole(r)} />
   }
 
   return (
@@ -124,8 +118,9 @@ function App() {
       <Navbar user={user} role={role} onLogout={handleLogout} onNavigate={setCurrentPage} currentPage={currentPage} />
       <main className="main-content">
         {currentPage === 'home' && <Home supabase={supabase} user={user} role={role} />}
-        {currentPage === 'teacher' && role === 'teacher' && <TeacherDashboard supabase={supabase} user={user} />}
-        {currentPage === 'student' && role === 'student' && <StudentDashboard supabase={supabase} user={user} />}
+        {currentPage === 'teacher' && role === 'teacher' && <TeacherDashboardMelodia user={user} />}
+        {currentPage === 'student' && role === 'student' && <StudentDashboardMelodia navigate={setCurrentPage} user={user} />}
+        {currentPage === 'lesson' && <LessonPlayerMelodia navigate={setCurrentPage} lessonId={1} />}
       </main>
     </div>
   )
